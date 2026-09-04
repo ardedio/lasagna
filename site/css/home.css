@@ -410,3 +410,18 @@
   color: var(--w-38);
 }
 .audit__hide:hover { color: var(--flame); }
+
+/* --------------------------------------------------------------------------
+   WORK ROWS WITHOUT A CASE PAGE
+   Rendered unlinked so nothing points at a 404. They stay in the index —
+   the studio has the work, the write-up just isn't up yet.
+   -------------------------------------------------------------------------- */
+.work__row.is-unlinked { cursor: default; }
+.work__row.is-unlinked:hover::before { opacity: 0.35; }
+.work__row.is-unlinked:hover .work__name { color: var(--w-72); }
+
+.work__tag--soon {
+  border-style: dashed;
+  border-color: var(--flame-dim);
+  color: var(--flame-dim);
+}

@@ -60,6 +60,13 @@ ffmpeg -y -i video/background.mp4 -frames:v 1 -q:v 4 video/background-poster.jpg
 | `kv-cocospack.jpg` | COCOSPACK |
 | `kv-dss.jpg` | DSS GROUP |
 
+케이스 상세 페이지가 쓰는 추가 컷:
+
+| 파일명 | 위치 |
+|---|---|
+| `kv-biolin-02.jpg` · `kv-biolin-03.jpg` | BIOLIN 케이스 스트립 2컷 |
+| `kv-synopex-ep1.jpg` · `kv-synopex-ep3.jpg` | SYNOPEX 케이스 스트립 2컷 |
+
 스펙: **16:9 · 최소 1280×720 · JPG · 220KB 내외**
 
 일괄 리사이즈:

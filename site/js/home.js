@@ -132,7 +132,7 @@
       var tags = el('ul', 'work__tags');
       (item.tags || []).forEach(function (t) { tags.appendChild(el('li', 'work__tag', t)); });
       tags.appendChild(el('li', 'work__tag', item.year));
-      row.appendChild(tags);
+      row.appendChild(tags);   // chips may still be appended below
 
       // Mobile inline thumb (hover preview is pointer-only).
       var thumb = el('div', 'work__thumb');
@@ -146,14 +146,22 @@
       thumb.appendChild(timg);
       row.appendChild(thumb);
 
-      // Whole row is the target. href is a placeholder until case pages exist.
-      var link = el('a', 'work__link');
-      link.setAttribute('href', '#work');
-      link.setAttribute('aria-label', item.name + ' — ' + item.meta);
-      link.addEventListener('mouseenter', function () { showPeek(src); });
-      link.addEventListener('mouseleave', hidePeek);
-      link.addEventListener('focus', hidePeek);
-      row.appendChild(link);
+      // Whole row is the target, but only where a case page actually exists.
+      // Rows without one stay unlinked rather than pointing at a 404.
+      var hit;
+      if (item.page) {
+        hit = el('a', 'work__link');
+        hit.setAttribute('href', item.page);
+        hit.setAttribute('aria-label', item.name + ' — ' + item.meta + ' — case study');
+      } else {
+        hit = el('div', 'work__link');
+        row.classList.add('is-unlinked');
+        tags.appendChild(el('li', 'work__tag work__tag--soon', '준비 중'));
+      }
+      hit.addEventListener('mouseenter', function () { showPeek(src); });
+      hit.addEventListener('mouseleave', hidePeek);
+      hit.addEventListener('focus', hidePeek);
+      row.appendChild(hit);
 
       frag.appendChild(row);
     });
