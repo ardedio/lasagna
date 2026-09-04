@@ -1,0 +1,168 @@
+/* ==========================================================================
+   LASAGNA EMPIRE — Base / Brand System
+   HARD RULES
+     · Ground   : Black (#0A0A0A)
+     · Accent   : Flame (#F15A24) — single accent, used as a system marker.
+     · Type     : ALL-GOTHIC (올고딕). No serif anywhere. Mac-native stack:
+                  Latin  -> Helvetica Neue
+                  Hangul -> Apple SD Gothic Neo (falls through automatically,
+                            Helvetica Neue carries no Hangul glyphs)
+   ========================================================================== */
+
+:root {
+  /* --- Brand ------------------------------------------------------------ */
+  --ink:        #0A0A0A;
+  --ink-raise:  #121212;
+  --flame:      #F15A24;
+  --flame-dim:  #B8431B;
+
+  /* --- Neutrals (on black) ---------------------------------------------- */
+  --w-100: #FFFFFF;
+  --w-72:  rgba(255,255,255,0.72);
+  --w-52:  rgba(255,255,255,0.52);
+  --w-38:  rgba(255,255,255,0.38);
+  --w-16:  rgba(255,255,255,0.16);
+  --w-10:  rgba(255,255,255,0.10);
+  --hair:  rgba(255,255,255,0.13);
+
+  /* --- Type ------------------------------------------------------------- */
+  --font: "Helvetica Neue", Helvetica, -apple-system, BlinkMacSystemFont,
+          "Apple SD Gothic Neo", "Pretendard Variable", Pretendard,
+          "Segoe UI", Arial, sans-serif;
+
+  /* --- Grid / rhythm ---------------------------------------------------- */
+  --gutter: 24px;
+  --margin: 32px;
+  --maxw:   1560px;
+  --rule:   1px;
+
+  /* --- Motion ----------------------------------------------------------- */
+  --ease:      cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-io:   cubic-bezier(0.65, 0, 0.35, 1);
+  --dur:       0.62s;
+}
+
+@media (min-width: 900px)  { :root { --margin: 48px; } }
+@media (min-width: 1280px) { :root { --margin: 64px; --gutter: 32px; } }
+
+/* --- Reset ---------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--w-100);
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, p, figure, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img, video { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+::selection { background: var(--flame); color: var(--ink); }
+
+/* --- Type primitives ------------------------------------------------------ */
+
+/* Display — tight, large, negative tracking. Pentagram discipline. */
+.t-display {
+  font-weight: 700;
+  font-size: clamp(2.75rem, 8.2vw, 8.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.042em;
+  text-wrap: balance;
+}
+
+.t-head {
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3.4vw, 3.25rem);
+  line-height: 1.06;
+  letter-spacing: -0.032em;
+}
+
+.t-sub {
+  font-weight: 500;
+  font-size: clamp(1.05rem, 1.5vw, 1.375rem);
+  line-height: 1.45;
+  letter-spacing: -0.018em;
+  color: var(--w-72);
+}
+
+.t-body { font-size: 0.9375rem; line-height: 1.65; color: var(--w-72); }
+
+/* Label — the workhorse. Uppercase, wide tracking, small. */
+.t-label {
+  font-weight: 500;
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--w-38);
+}
+
+.t-num {
+  font-weight: 500;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  color: var(--flame);
+}
+
+.flame { color: var(--flame); }
+
+/* --- Layout primitives ---------------------------------------------------- */
+.shell {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--margin);
+}
+
+.section { padding-block: clamp(80px, 11vw, 168px); }
+
+/* Section header: hairline rule + numbered label. Repeats site-wide. */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding-bottom: 18px;
+  margin-bottom: clamp(40px, 5vw, 72px);
+  border-bottom: var(--rule) solid var(--hair);
+}
+.section-head__idx { color: var(--flame); }
+
+/* --- Scroll reveal -------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* --- Focus ---------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--flame);
+  outline-offset: 3px;
+}
+
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 999;
+  background: var(--flame); color: var(--ink);
+  padding: 12px 18px; font-weight: 700;
+}
+.skip:focus { left: 0; }

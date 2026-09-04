@@ -1,0 +1,5 @@
+.DS_Store
+node_modules/
+
+# Hero source + derived web asset (binary; fetched via site/assets/fetch-hero.sh)
+site/assets/video/_raw.mp4

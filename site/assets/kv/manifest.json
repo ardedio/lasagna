@@ -1,0 +1,69 @@
+{
+  "_note": "Key-visual manifest. Drop the real thumbnails from ~/Downloads/Lasagna Film/_yt_upload/ into site/assets/kv/ using the `file` name below, then flip `placeholder` to false. Nothing else needs to change — index.html renders the Work index from this file.",
+  "_spec": { "ratio": "16:9", "min": "1280x720", "format": "jpg", "target_kb": 220 },
+  "items": [
+    {
+      "id": "biolin",
+      "name": "BIOLIN",
+      "meta": "더마 코스메틱 · 자체 브랜드",
+      "tags": ["Branding", "Naming", "Package"],
+      "year": "2026",
+      "file": "kv-biolin.jpg",
+      "placeholder": true
+    },
+    {
+      "id": "darefit",
+      "name": "DAREFIT",
+      "meta": "압구정 다리핏의원",
+      "tags": ["Medical", "Pitch Deck", "AI Film"],
+      "year": "2026",
+      "file": "kv-darefit.jpg",
+      "placeholder": true
+    },
+    {
+      "id": "tfit",
+      "name": "TFIT",
+      "meta": "티핏 · ICY 라인",
+      "tags": ["Retainer", "Social", "Meta 9:16"],
+      "year": "2026",
+      "file": "kv-tfit.jpg",
+      "placeholder": true
+    },
+    {
+      "id": "synopex",
+      "name": "SYNOPEX",
+      "meta": "시노펙스 · 브랜드 필름",
+      "tags": ["Cinematic", "4×30s", "Series"],
+      "year": "2026",
+      "file": "kv-synopex.jpg",
+      "placeholder": true
+    },
+    {
+      "id": "lie",
+      "name": "LIE COLLECTION",
+      "meta": "26FW · 이청청",
+      "tags": ["Pitch Deck", "Brand Story"],
+      "year": "2026",
+      "file": "kv-lie.jpg",
+      "placeholder": true
+    },
+    {
+      "id": "cocospack",
+      "name": "COCOSPACK",
+      "meta": "코코스팩 · About Us",
+      "tags": ["Web Architecture", "Design System"],
+      "year": "2026",
+      "file": "kv-cocospack.jpg",
+      "placeholder": true
+    },
+    {
+      "id": "dss",
+      "name": "DSS GROUP",
+      "meta": "동성사 · 유니퍼 · 딜라임",
+      "tags": ["AI Workflow", "PoC"],
+      "year": "2026",
+      "file": "kv-dss.jpg",
+      "placeholder": true
+    }
+  ]
+}

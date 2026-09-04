@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Key visual pending">
+  <rect width="1280" height="720" fill="#121212"/>
+  <g stroke="#F15A24" stroke-width="2" opacity="0.55">
+    <line x1="0" y1="0" x2="1280" y2="720"/>
+    <line x1="1280" y1="0" x2="0" y2="720"/>
+  </g>
+  <rect x="1" y="1" width="1278" height="718" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="2"/>
+  <rect x="470" y="322" width="340" height="76" fill="#0A0A0A"/>
+  <text x="640" y="370" fill="#F15A24" font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+        font-size="27" font-weight="700" letter-spacing="7" text-anchor="middle">KV PENDING</text>
+</svg>
