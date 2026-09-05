@@ -16,8 +16,7 @@ npx serve site
 site/
   index.html
   work/
-    biolin.html     케이스 상세
-    synopex.html
+    synopex.html    케이스 상세
   css/base.css      브랜드 시스템 · 타입 · 그리드 토큰
   css/home.css      Home 섹션 스타일
   css/case.css      케이스 상세 스타일
@@ -28,6 +27,8 @@ site/
     video/             background.mp4 (fetch-hero.sh 로 받는다)
     README.md          에셋 드롭인 가이드
 ```
+
+`drafts/` 는 배포 트리 밖이다 — 인덱스에서 내렸지만 보존하는 케이스 초안이 들어간다.
 
 - 설계 판단과 남은 결정: [`docs/HOME-V2.md`](docs/HOME-V2.md)
 - 케이스 페이지 추가법 · 카피 원칙 · 컴플라이언스: [`docs/CASE-PAGES.md`](docs/CASE-PAGES.md)

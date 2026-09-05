@@ -1,6 +1,7 @@
 # 케이스 상세 페이지 — 패턴
 
-`site/work/<id>.html` · 현재 BIOLIN · SYNOPEX 2건
+`site/work/<id>.html` · 현재 **SYNOPEX 1건**
+(BIOLIN 초안은 인덱스에서 내리면서 `drafts/work/biolin.html` 로 옮겼다 — 배포 트리 밖)
 
 ---
 
@@ -57,7 +58,6 @@ cp site/work/synopex.html site/work/tfit.html
 현재 필요한 파일:
 
 ```
-kv-biolin.jpg  kv-biolin-02.jpg  kv-biolin-03.jpg
 kv-synopex.jpg kv-synopex-ep1.jpg kv-synopex-ep3.jpg
 ```
 
@@ -92,5 +92,5 @@ kv-synopex.jpg kv-synopex-ep1.jpg kv-synopex-ep3.jpg
   변리사 확정 전까지 후보명은 페이지에 올리지 않는다.
 - **파트너사·협업자 실명, 예산, 계약 조건** — 각 사 동의 전 노출 ✕.
 
-두 페이지 모두 위 항목을 **의도적으로 비워뒀고**, 무엇을 왜 뺐는지는
-각 페이지의 Draft 패널에 적혀 있다.
+SYNOPEX 페이지와 보관 중인 BIOLIN 초안 모두 위 항목을 **의도적으로 비워뒀고**,
+무엇을 왜 뺐는지는 각 페이지의 Draft 패널에 적혀 있다.

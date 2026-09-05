@@ -425,3 +425,7 @@
   border-color: var(--flame-dim);
   color: var(--flame-dim);
 }
+
+/* Row whose scope copy hasn't been supplied yet — the meta slot says so
+   instead of rendering empty. Set in manifest.json via `needs_input`. */
+.work__meta.is-pending { color: var(--w-38); }

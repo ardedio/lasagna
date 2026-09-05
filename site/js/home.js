@@ -127,7 +127,9 @@
       var name = el('h3', 'work__name', item.name);
       row.appendChild(name);
 
-      row.appendChild(el('span', 'work__meta', item.meta));
+      var meta = el('span', 'work__meta', item.meta || '\uc790\ub8cc \uc815\ub9ac \uc911');
+      if (!item.meta) meta.classList.add('is-pending');
+      row.appendChild(meta);
 
       var tags = el('ul', 'work__tags');
       (item.tags || []).forEach(function (t) { tags.appendChild(el('li', 'work__tag', t)); });
@@ -186,16 +188,21 @@
 
     var pending = items.filter(function (i) { return i.placeholder; })
                        .map(function (i) { return i.name; });
+    var needsCopy = items.filter(function (i) { return i.needs_input; })
+                         .map(function (i) { return i.name; });
     var heroMissing = !hero || hero.getAttribute('data-video') !== 'ok';
 
     var lines = [];
     if (pending.length) {
       lines.push('KV ' + pending.length + '/' + items.length + ' \u2014 ' + pending.join(', '));
     }
+    if (needsCopy.length) {
+      lines.push('\uc2a4\ucf54\ud504 \ubbf8\uc785\ub825 \u2014 ' + needsCopy.join(', '));
+    }
     if (heroMissing) lines.push('HERO \u2014 assets/video/background.mp4 \uc5c6\uc74c');
     if (!lines.length) return;
 
-    var count = (pending.length ? 1 : 0) + (heroMissing ? 1 : 0);
+    var count = (pending.length ? 1 : 0) + (needsCopy.length ? 1 : 0) + (heroMissing ? 1 : 0);
     chip.textContent = count + ' asset slot' + (count > 1 ? 's' : '') + ' pending';
     body.textContent = lines.join('. ') + '. \uc124\uce58\ubc29\ubc95: site/assets/README.md';
     box.hidden = false;

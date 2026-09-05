@@ -48,24 +48,26 @@ ffmpeg -y -i video/background.mp4 -frames:v 1 -q:v 4 video/background-poster.jpg
 
 원본: `~/Downloads/Lasagna Film/_yt_upload/` 의 유튜브 썸네일.
 
-`kv/manifest.json` 의 `file` 이름으로 저장한다:
+`kv/manifest.json` 의 `file` 이름으로 저장한다.
+
+**지금 인덱스에 걸린 4건 — 이것만 채우면 된다:**
 
 | 파일명 | 프로젝트 |
 |---|---|
-| `kv-biolin.jpg` | BIOLIN |
-| `kv-darefit.jpg` | DAREFIT |
-| `kv-tfit.jpg` | TFIT |
-| `kv-synopex.jpg` | SYNOPEX |
-| `kv-lie.jpg` | LIE COLLECTION |
-| `kv-cocospack.jpg` | COCOSPACK |
-| `kv-dss.jpg` | DSS GROUP |
+| `kv-leesangbong.jpg` | LIE SANGBONG (이상봉) |
+| `kv-lie.jpg` | LIE (라이) |
+| `kv-synopex.jpg` | SYNOPEX (시노펙스) |
+| `kv-haruharu.jpg` | 하루하루 |
 
 케이스 상세 페이지가 쓰는 추가 컷:
 
 | 파일명 | 위치 |
 |---|---|
-| `kv-biolin-02.jpg` · `kv-biolin-03.jpg` | BIOLIN 케이스 스트립 2컷 |
 | `kv-synopex-ep1.jpg` · `kv-synopex-ep3.jpg` | SYNOPEX 케이스 스트립 2컷 |
+
+**백로그 5건** (BIOLIN · DAREFIT · TFIT · COCOSPACK · DSS GROUP) 은 자료정리 대기라
+지금 넣을 필요 없다. `manifest.json` 의 `_backlog` 에 데이터가 그대로 남아 있으니,
+인덱스로 되돌릴 때 `items` 로 옮기고 그때 `kv-<id>.jpg` 를 넣으면 된다.
 
 스펙: **16:9 · 최소 1280×720 · JPG · 220KB 내외**
 

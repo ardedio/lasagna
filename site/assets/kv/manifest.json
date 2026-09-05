@@ -1,106 +1,114 @@
 {
-  "_note": "Single source of truth for the Work index on the Home page. Drop the real thumbnails from ~/Downloads/Lasagna Film/_yt_upload/ into site/assets/kv/ using the `file` name below, then flip `placeholder` to false. `page` points at the case detail page; null means no page is built yet and the row renders unlinked rather than 404-ing.",
-  "_spec": {
-    "ratio": "16:9",
-    "min": "1280x720",
-    "format": "jpg",
-    "target_kb": 220
-  },
+  "_note": "Single source of truth for the Work index on the Home page. `items` is what renders, in order. `_backlog` holds projects pulled out of the index pending 자료정리 — move an entry back into `items` when its material is ready; nothing else needs to change. `page` points at a case detail page; null renders the row unlinked with a 준비 중 chip rather than a 404. `needs_input: true` marks a row whose scope and copy are not yet supplied — the row renders with a 자료 정리 중 meta line and is counted by the asset chip.",
+  "_spec": { "ratio": "16:9", "min": "1280x720", "format": "jpg", "target_kb": 220 },
+
   "items": [
     {
-      "id": "biolin",
-      "name": "BIOLIN",
-      "meta": "더마 코스메틱 · 자체 브랜드",
-      "tags": [
-        "Branding",
-        "Naming",
-        "Package"
-      ],
+      "id": "leesangbong",
+      "name": "LIE SANGBONG",
+      "meta": "",
+      "tags": [],
       "year": "2026",
-      "file": "kv-biolin.jpg",
+      "file": "kv-leesangbong.jpg",
       "placeholder": true,
-      "page": "work/biolin.html"
+      "page": null,
+      "needs_input": true
     },
     {
-      "id": "darefit",
-      "name": "DAREFIT",
-      "meta": "압구정 다리핏의원",
-      "tags": [
-        "Medical",
-        "Pitch Deck",
-        "AI Film"
-      ],
+      "id": "lie",
+      "name": "LIE",
+      "meta": "26FW · 이청청",
+      "tags": ["Pitch Deck", "Brand Story"],
       "year": "2026",
-      "file": "kv-darefit.jpg",
+      "file": "kv-lie.jpg",
       "placeholder": true,
-      "page": null
-    },
-    {
-      "id": "tfit",
-      "name": "TFIT",
-      "meta": "티핏 · ICY 라인",
-      "tags": [
-        "Retainer",
-        "Social",
-        "Meta 9:16"
-      ],
-      "year": "2026",
-      "file": "kv-tfit.jpg",
-      "placeholder": true,
-      "page": null
+      "page": null,
+      "needs_input": false
     },
     {
       "id": "synopex",
       "name": "SYNOPEX",
       "meta": "시노펙스 · 브랜드 필름",
-      "tags": [
-        "Cinematic",
-        "4×30s",
-        "Series"
-      ],
+      "tags": ["Cinematic", "4×30s", "Series"],
       "year": "2026",
       "file": "kv-synopex.jpg",
       "placeholder": true,
-      "page": "work/synopex.html"
+      "page": "work/synopex.html",
+      "needs_input": false
     },
     {
-      "id": "lie",
-      "name": "LIE COLLECTION",
-      "meta": "26FW · 이청청",
-      "tags": [
-        "Pitch Deck",
-        "Brand Story"
-      ],
+      "id": "haruharu",
+      "name": "하루하루",
+      "meta": "",
+      "tags": [],
       "year": "2026",
-      "file": "kv-lie.jpg",
+      "file": "kv-haruharu.jpg",
       "placeholder": true,
-      "page": null
+      "page": null,
+      "needs_input": true
+    }
+  ],
+
+  "_backlog": [
+    {
+      "id": "biolin",
+      "name": "BIOLIN",
+      "meta": "더마 코스메틱 · 자체 브랜드",
+      "tags": ["Branding", "Naming", "Package"],
+      "year": "2026",
+      "file": "kv-biolin.jpg",
+      "placeholder": true,
+      "page": null,
+      "needs_input": false,
+      "_hold": "상표 클리어런스 전. 케이스 초안은 drafts/work/biolin.html 에 보관 — 공개 트리 밖."
+    },
+    {
+      "id": "darefit",
+      "name": "DAREFIT",
+      "meta": "압구정 다리핏의원",
+      "tags": ["Medical", "Pitch Deck", "AI Film"],
+      "year": "2026",
+      "file": "kv-darefit.jpg",
+      "placeholder": true,
+      "page": null,
+      "needs_input": false,
+      "_hold": "자료정리 대기. 공개 시 의료법 §56 사전 검토 필요."
+    },
+    {
+      "id": "tfit",
+      "name": "TFIT",
+      "meta": "티핏 · ICY 라인",
+      "tags": ["Retainer", "Social", "Meta 9:16"],
+      "year": "2026",
+      "file": "kv-tfit.jpg",
+      "placeholder": true,
+      "page": null,
+      "needs_input": false,
+      "_hold": "자료정리 대기."
     },
     {
       "id": "cocospack",
       "name": "COCOSPACK",
       "meta": "코코스팩 · About Us",
-      "tags": [
-        "Web Architecture",
-        "Design System"
-      ],
+      "tags": ["Web Architecture", "Design System"],
       "year": "2026",
       "file": "kv-cocospack.jpg",
       "placeholder": true,
-      "page": null
+      "page": null,
+      "needs_input": false,
+      "_hold": "자료정리 대기."
     },
     {
       "id": "dss",
       "name": "DSS GROUP",
       "meta": "동성사 · 유니퍼 · 딜라임",
-      "tags": [
-        "AI Workflow",
-        "PoC"
-      ],
+      "tags": ["AI Workflow", "PoC"],
       "year": "2026",
       "file": "kv-dss.jpg",
       "placeholder": true,
-      "page": null
+      "page": null,
+      "needs_input": false,
+      "_hold": "자료정리 대기. PoC 단계라 공개 여부 자체가 미정."
     }
   ]
 }
