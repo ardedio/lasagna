@@ -1,35 +1,57 @@
 #!/usr/bin/env bash
 # Key-visual helper. Run on the Mac — the cloud session cannot see ~/Downloads.
 #
-#   ./collect-kv.sh                     썸네일 폴더에 뭐가 있는지 나열
+#   ./collect-kv.sh                     원본 폴더의 프로젝트 목록
+#   ./collect-kv.sh --find <검색어>       그 프로젝트의 이미지 후보 찾기
 #   ./collect-kv.sh <파일> <id>          한 장을 kv-<id>.jpg 로 규격 맞춰 복사
 #   ./collect-kv.sh --check             지금 채워진/빈 슬롯 확인
+#
+# 원본(Client 폴더)은 읽기만 한다. 사이트용 사본만 저장소에 들어간다.
 #
 # ids: manifest.json 의 items[].id  (leesangbong · lie · synopex · haruharu)
 set -euo pipefail
 
-SRC_DIR="${LE_KV_SRC:-$HOME/Downloads/Lasagna Film/_yt_upload}"
+# 원본 아카이브. 여기서 읽기만 하고 절대 수정하지 않는다.
+SRC_DIR="${LE_KV_SRC:-$HOME/Lasagna/Lasagna_Business/Client}"
 KV_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/kv"
 MANIFEST="$KV_DIR/manifest.json"
 
+check_src() {
+  [ -d "$SRC_DIR" ] && return 0
+  echo "원본 폴더를 찾지 못했다: $SRC_DIR"
+  echo "다른 경로면:  LE_KV_SRC=/경로 ./collect-kv.sh"
+  exit 1
+}
+
 list_source() {
-  if [ ! -d "$SRC_DIR" ]; then
-    echo "썸네일 폴더를 찾지 못했다: $SRC_DIR"
-    echo "다른 경로면:  LE_KV_SRC=/경로 ./collect-kv.sh"
-    exit 1
-  fi
+  check_src
   echo "원본: $SRC_DIR"
+  echo "(읽기 전용 — 이 폴더는 저장소에 들어가지 않는다)"
   echo
-  find "$SRC_DIR" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
-    | sort | while read -r f; do
-        dim="?"
-        command -v sips >/dev/null && dim="$(sips -g pixelWidth -g pixelHeight "$f" 2>/dev/null \
-          | awk '/pixelWidth/{w=$2} /pixelHeight/{h=$2} END{if(w)printf "%sx%s", w, h}')"
-        printf "  %-58s %s\n" "$(basename "$f")" "$dim"
-      done
+  echo "프로젝트 폴더:"
+  find "$SRC_DIR" -mindepth 1 -maxdepth 1 -type d | sort | while read -r d; do
+    n=$(find "$d" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) 2>/dev/null | wc -l | tr -d ' ')
+    printf "  %-48s 이미지 %s장\n" "$(basename "$d")" "$n"
+  done
   echo
-  echo "이 목록을 그대로 붙여넣으면 어떤 파일이 어느 프로젝트인지 매핑해준다."
-  echo "직접 넣으려면:  ./collect-kv.sh \"<파일명>\" <id>"
+  echo "다음:  ./collect-kv.sh --find <프로젝트명 일부>"
+}
+
+find_images() {
+  check_src
+  local q="$1"
+  echo "'$q' 검색 결과 — $SRC_DIR"
+  echo
+  find "$SRC_DIR" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
+    -ipath "*${q}*" 2>/dev/null | head -40 | while read -r f; do
+      dim="?"
+      command -v sips >/dev/null && dim="$(sips -g pixelWidth -g pixelHeight "$f" 2>/dev/null \
+        | awk '/pixelWidth/{w=$2} /pixelHeight/{h=$2} END{if(w)printf "%sx%s", w, h}')"
+      printf "  %-10s %s\n" "$dim" "${f#$SRC_DIR/}"
+    done
+  echo
+  echo "쓸 컷을 정했으면:"
+  echo "  ./collect-kv.sh \"<전체경로>\" <id>"
 }
 
 check_slots() {
@@ -89,6 +111,8 @@ PY
 
 case "${1:-}" in
   ""|--list) list_source ;;
+  --find)    [ -n "${2:-}" ] || { echo "사용법: ./collect-kv.sh --find <검색어>"; exit 1; }
+             find_images "$2" ;;
   --check)   check_slots ;;
   *)         [ $# -eq 2 ] || { echo "사용법: ./collect-kv.sh <파일> <id>"; exit 1; }
              install_one "$1" "$2" ;;

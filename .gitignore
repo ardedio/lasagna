@@ -3,3 +3,8 @@ node_modules/
 
 # Hero source + derived web asset (binary; fetched via site/assets/fetch-hero.sh)
 site/assets/video/_raw.mp4
+
+# 클라이언트 원본 아카이브는 저장소에 들어가지 않는다.
+# (기밀 자료·대용량 원본. 사이트용 사본만 site/assets/ 로.)
+Lasagna_Business/
+Client/

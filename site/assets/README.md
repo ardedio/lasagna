@@ -50,7 +50,16 @@ ffmpeg -y -i video/background.mp4 -frames:v 1 -q:v 4 video/background-poster.jpg
 
 ## 2. 키비주얼 — `kv/*.jpg`
 
-원본: `~/Downloads/Lasagna Film/_yt_upload/` 의 유튜브 썸네일.
+원본 아카이브: **`/Users/lasagna/Lasagna/Lasagna_Business/Client`**
+
+> ⚠️ **이 폴더는 저장소에 넣지 않는다.** 클라이언트 원본·기밀 자료·대용량 파일이
+> 모두 들어 있다. 저장소에는 **사이트에 실제 올라가는 사본만** 둔다.
+>
+> ```
+> Client/                    원본 (git 아님, 읽기만)
+>     ↓ 선별 + 경량화
+> site/assets/kv/            사이트용 사본 (git)
+> ```
 
 `kv/manifest.json` 의 `file` 이름으로 저장한다.
 

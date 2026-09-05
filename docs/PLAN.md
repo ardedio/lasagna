@@ -165,3 +165,6 @@ v2 의 브랜드 시스템(블랙 + `#F15A24` + 올고딕)을 유지할지는 **
 3. **`#F15A24`** — 흑백안 / 주황안 비교 후 결정 (`--accent` 한 줄로 전환)
 4. **`7+ Active clients`** — v2 프로토타입의 수치. 현재 정확한 숫자는?
 5. **웹 작업 폴더 위치** — `logo.png` · `background.mp4` 원본 관리 기준점.
+
+
+> **원본 아카이브:** `/Users/lasagna/Lasagna/Lasagna_Business/Client` — git 제외.
