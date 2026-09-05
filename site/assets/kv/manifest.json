@@ -53,14 +53,18 @@
     },
     {
       "id": "haruharu",
-      "name": "하루하루",
-      "meta": "",
-      "tags": [],
+      "name": "HARUHARU WONDER",
+      "meta": "미국 리테일 런칭 · Target 전역 입점",
+      "tags": [
+        "Campaign",
+        "Social",
+        "US Market"
+      ],
       "year": "2026",
       "file": "kv-haruharu.jpg",
       "placeholder": true,
-      "page": null,
-      "needs_input": true
+      "page": "work/haruharu-wonder.html",
+      "needs_input": false
     }
   ],
   "_backlog": [
