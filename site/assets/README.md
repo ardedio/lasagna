@@ -12,7 +12,7 @@
 
 ## 1. 히어로 영상 — `video/background.mp4`
 
-원본: `http://www.lasagna.kr/background.mp4`
+원본: `https://www.lasagna.kr/background.mp4`
 
 ```bash
 cd site/assets
@@ -22,7 +22,7 @@ cd site/assets
 수동으로 할 경우:
 
 ```bash
-curl -L -o video/_raw.mp4 http://www.lasagna.kr/background.mp4
+curl -L -o video/_raw.mp4 https://www.lasagna.kr/background.mp4
 
 # 웹 루프용: 무음, faststart, 1080p 상한, ~8초
 ffmpeg -y -i video/_raw.mp4 \
@@ -71,7 +71,21 @@ ffmpeg -y -i video/background.mp4 -frames:v 1 -q:v 4 video/background-poster.jpg
 
 스펙: **16:9 · 최소 1280×720 · JPG · 220KB 내외**
 
-일괄 리사이즈:
+### 헬퍼 스크립트
+
+원본 파일명을 몰라도 되도록 `collect-kv.sh` 를 붙였다.
+
+```bash
+cd site/assets
+./collect-kv.sh                    # _yt_upload 폴더 내용 + 해상도 나열
+./collect-kv.sh "<파일명>" synopex   # 한 장을 kv-synopex.jpg 로 규격 맞춰 복사
+./collect-kv.sh --check            # 지금 몇 개 채워졌는지
+```
+
+폴더 경로가 다르면 `LE_KV_SRC=/경로 ./collect-kv.sh`.
+`_backlog` 에 있는 프로젝트 id 는 거부한다 — 먼저 `items` 로 옮겨야 한다.
+
+일괄 리사이즈 (직접 할 경우):
 
 ```bash
 cd site/assets/kv

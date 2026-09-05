@@ -26,10 +26,13 @@ site/
     kv/manifest.json   Work 인덱스의 단일 소스 (page 필드가 케이스 링크)
     video/             background.mp4 (fetch-hero.sh 로 받는다)
     README.md          에셋 드롭인 가이드
+    fetch-hero.sh      히어로 영상 다운로드 + 웹 인코딩
+    collect-kv.sh      썸네일 목록 확인 · 슬롯 채우기
 ```
 
 `drafts/` 는 배포 트리 밖이다 — 인덱스에서 내렸지만 보존하는 케이스 초안이 들어간다.
 
+- 배포 · HTTPS (현재 사이트가 `안전하지 않음` 인 건): [`docs/DEPLOY.md`](docs/DEPLOY.md)
 - 설계 판단과 남은 결정: [`docs/HOME-V2.md`](docs/HOME-V2.md)
 - 케이스 페이지 추가법 · 카피 원칙 · 컴플라이언스: [`docs/CASE-PAGES.md`](docs/CASE-PAGES.md)
 - 에셋 채우는 법: [`site/assets/README.md`](site/assets/README.md)

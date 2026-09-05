@@ -55,7 +55,7 @@ Pretendard 를 붙이려면 `--font` 한 줄만 고치면 된다.
 
 ## 3. 히어로 영상
 
-`http://www.lasagna.kr/background.mp4` 를 **이 세션에서 받지 못했다** — 환경의 egress
+`https://www.lasagna.kr/background.mp4` 를 **이 세션에서 받지 못했다** — 환경의 egress
 허용목록에 `www.lasagna.kr` 이 없어 403(`host_not_allowed`)이 떨어진다. 프록시 설정
 문제가 아니라 환경 네트워크 정책이다.
 
