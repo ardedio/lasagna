@@ -32,11 +32,15 @@
 
 ## 고치는 법 — 호스팅에 달렸다
 
-**어디에 올라가 있는지 알려주면 정확한 절차를 준다.** 케이스별로:
+현재 호스팅은 **카페24** — 무료 SSL 을 제공하므로 추가 비용 없이 해결된다.
+실제 클릭 순서와 파일질라 업로드까지 [`CAFE24-HTTPS.md`](CAFE24-HTTPS.md) 에 정리했다.
+
+케이스별 요약:
 
 | 호스팅 | 조치 |
 |---|---|
-| 카페24 · 가비아 · 후이즈 등 국내 호스팅 | 관리 콘솔에서 **무료 SSL(Let's Encrypt)** 신청 → 적용 후 HTTP→HTTPS 리다이렉트 켜기 |
+| **카페24** (현재 사용 중) | → **[단계별 가이드: `CAFE24-HTTPS.md`](CAFE24-HTTPS.md)** |
+| 가비아 · 후이즈 등 국내 호스팅 | 관리 콘솔에서 **무료 SSL(Let's Encrypt)** 신청 → 적용 후 HTTP→HTTPS 리다이렉트 켜기 |
 | Cloudflare 를 이미 쓰는 경우 | SSL/TLS 모드를 **Full (strict)** 로, `Always Use HTTPS` 켜기 |
 | 자체 서버 (nginx/Apache) | `certbot --nginx -d lasagna.kr -d www.lasagna.kr` → 자동 갱신 확인 |
 | Vercel · Netlify · Cloudflare Pages | 도메인 연결만 하면 **인증서 자동 발급** |
