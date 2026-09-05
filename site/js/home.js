@@ -1,15 +1,14 @@
 /* ==========================================================================
-   LASAGNA EMPIRE — Home v2
-   No dependencies. Static-host safe.
+   LASAGNA — Home v3
+   의존성 없음. 정적 호스팅 그대로 동작.
    ========================================================================== */
 (function () {
   'use strict';
 
   var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var KV_DIR  = 'assets/kv/';
-  var FALLBACK_KV = KV_DIR + '_placeholder.svg';
+  var KV_DIR = 'assets/kv/';
+  var FALLBACK = KV_DIR + '_placeholder.svg';
 
-  /* ---------------------------------------------------------------- utils */
   function el(tag, cls, text) {
     var n = document.createElement(tag);
     if (cls) n.className = cls;
@@ -18,99 +17,71 @@
   }
   function pad(n) { return (n < 10 ? '0' : '') + n; }
 
-  /* ------------------------------------------------------- scroll reveal */
+  /* ------------------------------------------------------------- 리빌 --- */
   var io = null;
   if ('IntersectionObserver' in window && !REDUCED) {
-    io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
       });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.06 });
   }
-  function observe(node) {
-    if (io) io.observe(node); else node.classList.add('is-in');
-  }
+  function observe(n) { if (io) io.observe(n); else n.classList.add('in'); }
   document.querySelectorAll('.reveal').forEach(observe);
 
-  /* ------------------------------------------------------------ hero video
-     The loop is texture. If background.mp4 is missing, the CSS gradient
-     ground stays and nothing breaks. */
-  (function heroVideo() {
-    var hero  = document.querySelector('.hero');
-    var video = document.getElementById('heroVideo');
-    if (!hero || !video) return;
+  /* --------------------------------------------------------- 히어로 영상 --
+     영상은 질감이다. 없으면 CSS 그라운드가 남고 아무것도 깨지지 않는다. */
+  (function () {
+    var hero = document.querySelector('.hero');
+    var v = document.getElementById('heroVideo');
+    if (!hero || !v) return;
 
-    function ok() {
-      hero.setAttribute('data-video', 'ok');
-      video.classList.add('is-ready');
+    function ok() { hero.setAttribute('data-video', 'ok'); v.classList.add('ready'); }
+    v.addEventListener('loadeddata', ok);
+    v.addEventListener('error', function () { hero.setAttribute('data-video', 'missing'); }, true);
+    if (v.readyState >= 2) ok();
+
+    var p = v.play();
+    if (p && p.catch) {
+      p.catch(function () {
+        window.addEventListener('pointerdown', function once() {
+          var q = v.play(); if (q && q.catch) q.catch(function () {});
+          window.removeEventListener('pointerdown', once);
+        }, { once: true });
+      });
     }
-    function fail() { hero.setAttribute('data-video', 'missing'); }
-
-    video.addEventListener('loadeddata', ok);
-    video.addEventListener('error', fail, true);
-    if (video.readyState >= 2) ok();
-
-    // Some browsers block autoplay even when muted; retry once on first input.
-    var kick = function () {
-      var p = video.play();
-      if (p && p.catch) p.catch(function () {});
-      window.removeEventListener('pointerdown', kick);
-    };
-    var attempt = video.play();
-    if (attempt && attempt.catch) {
-      attempt.catch(function () { window.addEventListener('pointerdown', kick, { once: true }); });
-    }
-
-    // Reduced motion: hold a single frame instead of looping.
-    if (REDUCED) { video.removeAttribute('loop'); video.pause(); }
+    if (REDUCED) { v.removeAttribute('loop'); v.pause(); }
   })();
 
-  /* ---------------------------------------------------------------- ticker
-     Duplicate the sequence so the -50% keyframe loops seamlessly. */
-  (function ticker() {
-    var track = document.getElementById('tickerTrack');
-    if (!track) return;
-    var seq = track.querySelector('.ticker__seq');
-    if (!seq) return;
-    track.appendChild(seq.cloneNode(true));
-  })();
-
-  /* ------------------------------------------------------------ KV preview */
-  var peek    = document.getElementById('kvPeek');
+  /* ----------------------------------------------------------- KV 프리뷰 - */
+  var peek = document.getElementById('kvPeek');
   var peekImg = document.getElementById('kvPeekImg');
-  var peekOn  = false;
-  var tx = 0, ty = 0, raf = null;
+  var on = false, tx = 0, ty = 0, raf = null;
 
-  function movePeek() {
+  function move() {
     raf = null;
     if (peek) peek.style.transform =
-      'translate3d(' + tx + 'px,' + ty + 'px,0) scale(' + (peekOn ? 1 : 0.94) + ')';
+      'translate3d(' + tx + 'px,' + ty + 'px,0) scale(' + (on ? 1 : 0.95) + ')';
   }
-  function onMove(e) {
-    tx = e.clientX - 150;                 // half of .kv-peek width
-    ty = e.clientY - 84;                  // roughly half its height
-    if (!raf) raf = requestAnimationFrame(movePeek);
-  }
-  function showPeek(src) {
+  function track(e) { tx = e.clientX - 140; ty = e.clientY - 79; if (!raf) raf = requestAnimationFrame(move); }
+  function show(src) {
     if (!peek || !peekImg) return;
     if (peekImg.getAttribute('src') !== src) peekImg.setAttribute('src', src);
-    peekOn = true;
-    peek.classList.add('is-on');
-    window.addEventListener('pointermove', onMove);
+    on = true; peek.classList.add('on');
+    window.addEventListener('pointermove', track);
   }
-  function hidePeek() {
+  function hide() {
     if (!peek) return;
-    peekOn = false;
-    peek.classList.remove('is-on');
-    window.removeEventListener('pointermove', onMove);
+    on = false; peek.classList.remove('on');
+    window.removeEventListener('pointermove', track);
   }
   if (peekImg) {
     peekImg.addEventListener('error', function () {
-      if (peekImg.getAttribute('src') !== FALLBACK_KV) peekImg.setAttribute('src', FALLBACK_KV);
+      if (peekImg.getAttribute('src') !== FALLBACK) peekImg.setAttribute('src', FALLBACK);
     });
   }
 
-  /* -------------------------------------------------------- work index --- */
+  /* --------------------------------------------------------- Work 렌더 -- */
   function renderWork(items) {
     var list = document.getElementById('workList');
     if (!list) return;
@@ -118,51 +89,45 @@
 
     items.forEach(function (item, i) {
       var src = KV_DIR + item.file;
-
       var row = el('li', 'work__row reveal');
-      row.style.setProperty('--reveal-delay', (i * 55) + 'ms');
+      row.style.setProperty('--d', (i * 60) + 'ms');
 
-      row.appendChild(el('span', 'work__idx t-num', pad(i + 1)));
+      row.appendChild(el('span', 'work__i', pad(i + 1)));
+      row.appendChild(el('h3', 'work__name', item.name));
 
-      var name = el('h3', 'work__name', item.name);
-      row.appendChild(name);
-
-      var meta = el('span', 'work__meta', item.meta || '\uc790\ub8cc \uc815\ub9ac \uc911');
-      if (!item.meta) meta.classList.add('is-pending');
+      var meta = el('span', 'work__meta', item.meta || '자료 정리 중');
+      if (!item.meta) meta.classList.add('pending');
       row.appendChild(meta);
 
       var tags = el('ul', 'work__tags');
       (item.tags || []).forEach(function (t) { tags.appendChild(el('li', 'work__tag', t)); });
       tags.appendChild(el('li', 'work__tag', item.year));
-      row.appendChild(tags);   // chips may still be appended below
+      row.appendChild(tags);
 
-      // Mobile inline thumb (hover preview is pointer-only).
       var thumb = el('div', 'work__thumb');
-      var timg  = el('img');
+      var timg = el('img');
       timg.setAttribute('loading', 'lazy');
       timg.setAttribute('alt', item.name + ' key visual');
       timg.setAttribute('src', src);
       timg.addEventListener('error', function () {
-        if (timg.getAttribute('src') !== FALLBACK_KV) timg.setAttribute('src', FALLBACK_KV);
+        if (timg.getAttribute('src') !== FALLBACK) timg.setAttribute('src', FALLBACK);
       });
       thumb.appendChild(timg);
       row.appendChild(thumb);
 
-      // Whole row is the target, but only where a case page actually exists.
-      // Rows without one stay unlinked rather than pointing at a 404.
+      // 케이스 페이지가 있는 행만 링크. 없으면 404 로 보내지 않는다.
       var hit;
       if (item.page) {
-        hit = el('a', 'work__link');
+        hit = el('a', 'work__hit');
         hit.setAttribute('href', item.page);
-        hit.setAttribute('aria-label', item.name + ' — ' + item.meta + ' — case study');
+        hit.setAttribute('aria-label', item.name + ' — case study');
       } else {
-        hit = el('div', 'work__link');
-        row.classList.add('is-unlinked');
+        hit = el('div', 'work__hit');
         tags.appendChild(el('li', 'work__tag work__tag--soon', '준비 중'));
       }
-      hit.addEventListener('mouseenter', function () { showPeek(src); });
-      hit.addEventListener('mouseleave', hidePeek);
-      hit.addEventListener('focus', hidePeek);
+      hit.addEventListener('mouseenter', function () { show(src); });
+      hit.addEventListener('mouseleave', hide);
+      hit.addEventListener('focus', hide);
       row.appendChild(hit);
 
       frag.appendChild(row);
@@ -172,77 +137,33 @@
     list.querySelectorAll('.reveal').forEach(observe);
   }
 
-  /* ---------------------------------------------------------- asset audit
-     Dev-only. Names the slots still holding placeholders. Never renders once
-     every manifest entry is real and background.mp4 is loading. */
-  function audit(items) {
-    var box    = document.getElementById('audit');
-    var body   = document.getElementById('auditBody');
-    var chip   = document.getElementById('auditChip');
-    var toggle = document.getElementById('auditToggle');
-    var hide   = document.getElementById('auditHide');
-    var hero   = document.querySelector('.hero');
-    if (!box || !body || !chip || !toggle) return;
-
-    try { if (sessionStorage.getItem('le.audit.off') === '1') return; } catch (e) {}
-
-    var pending = items.filter(function (i) { return i.placeholder; })
-                       .map(function (i) { return i.name; });
-    var needsCopy = items.filter(function (i) { return i.needs_input; })
-                         .map(function (i) { return i.name; });
-    var heroMissing = !hero || hero.getAttribute('data-video') !== 'ok';
-
-    var lines = [];
-    if (pending.length) {
-      lines.push('KV ' + pending.length + '/' + items.length + ' \u2014 ' + pending.join(', '));
-    }
-    if (needsCopy.length) {
-      lines.push('\uc2a4\ucf54\ud504 \ubbf8\uc785\ub825 \u2014 ' + needsCopy.join(', '));
-    }
-    if (heroMissing) lines.push('HERO \u2014 assets/video/background.mp4 \uc5c6\uc74c');
-    if (!lines.length) return;
-
-    var count = (pending.length ? 1 : 0) + (needsCopy.length ? 1 : 0) + (heroMissing ? 1 : 0);
-    chip.textContent = count + ' asset slot' + (count > 1 ? 's' : '') + ' pending';
-    body.textContent = lines.join('. ') + '. \uc124\uce58\ubc29\ubc95: site/assets/README.md';
-    box.hidden = false;
-
-    toggle.addEventListener('click', function () {
-      var open = box.classList.toggle('is-open');
-      toggle.setAttribute('aria-expanded', String(open));
-      var chev = toggle.querySelector('.audit__chev');
-      if (chev) chev.textContent = open ? '\u2212' : '+';
+  /* ------------------------------------------------------- 메일 복사 ---- */
+  document.querySelectorAll('a[data-mail]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      var note = a.parentNode.querySelector('.copied');
+      var done = function () {
+        if (!note) return;
+        note.classList.add('show');
+        setTimeout(function () { note.classList.remove('show'); }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(a.textContent.trim()).then(done, function () {});
+      }
     });
+  });
 
-    if (hide) {
-      hide.addEventListener('click', function () {
-        box.hidden = true;
-        try { sessionStorage.setItem('le.audit.off', '1'); } catch (e) {}
-      });
-    }
-  }
-
-  /* ------------------------------------------------------------------ boot */
+  /* ------------------------------------------------------------- boot --- */
   fetch(KV_DIR + 'manifest.json', { cache: 'no-cache' })
-    .then(function (r) {
-      if (!r.ok) throw new Error('manifest ' + r.status);
-      return r.json();
-    })
-    .then(function (data) {
-      var items = (data && data.items) || [];
-      renderWork(items);
-      // Give the hero video a beat to resolve before auditing it.
-      setTimeout(function () { audit(items); }, 1600);
-    })
+    .then(function (r) { if (!r.ok) throw new Error('manifest ' + r.status); return r.json(); })
+    .then(function (d) { renderWork((d && d.items) || []); })
     .catch(function (err) {
-      // file:// blocks fetch in some browsers — say so rather than showing nothing.
       var list = document.getElementById('workList');
       if (list && !list.children.length) {
-        var note = el('li', 'work__row');
-        note.appendChild(el('span', 'work__meta',
+        var li = el('li', 'work__row');
+        li.appendChild(el('span', 'work__meta',
           'Work 목록을 불러오지 못했습니다 (' + err.message + '). ' +
-          'file:// 로 열면 fetch가 차단됩니다 — `npx serve site` 로 실행하세요.'));
-        list.appendChild(note);
+          'file:// 로 열면 fetch 가 차단됩니다 — `npx serve site` 로 실행하세요.'));
+        list.appendChild(li);
       }
     });
 })();

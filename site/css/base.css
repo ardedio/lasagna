@@ -1,173 +1,128 @@
 /* ==========================================================================
-   LASAGNA EMPIRE — Base / Brand System
-   HARD RULES
-     · Ground   : Black (#0A0A0A)
-     · Accent   : Flame (#F15A24) — single accent, used as a system marker.
-     · Type     : ALL-GOTHIC (올고딕). No serif anywhere. Mac-native stack:
-                  Latin  -> Helvetica Neue
-                  Hangul -> Apple SD Gothic Neo (falls through automatically,
-                            Helvetica Neue carries no Hangul glyphs)
+   LASAGNA — Base
+   구조 원리: 겹겹이 쌓기(layering). 이름이 곧 방법론이다.
+
+   타입: 현재 라이브 사이트와 동일하게 Inter + Noto Sans KR.
+        둘 다 고딕이라 "올고딕" 하드룰을 만족한다. 브랜드에 이미 자리잡은
+        조합이므로 시스템 폰트로 바꾸지 않는다.
+
+   컬러: 흑백 기조. 액센트는 --accent 한 줄로 바뀐다.
+        (라이브 사이트에 액센트 컬러가 없어 흑백을 기본값으로 둔다)
    ========================================================================== */
 
 :root {
-  /* --- Brand ------------------------------------------------------------ */
-  --ink:        #0A0A0A;
-  --ink-raise:  #121212;
-  --flame:      #F15A24;
-  --flame-dim:  #B8431B;
+  --bg:        #000;
+  --bg-raise:  #111;
+  --bg-layer:  #0a0a0a;
 
-  /* --- Neutrals (on black) ---------------------------------------------- */
-  --w-100: #FFFFFF;
-  --w-72:  rgba(255,255,255,0.72);
-  --w-52:  rgba(255,255,255,0.52);
-  --w-38:  rgba(255,255,255,0.38);
-  --w-16:  rgba(255,255,255,0.16);
-  --w-10:  rgba(255,255,255,0.10);
-  --hair:  rgba(255,255,255,0.13);
+  --fg:        #fff;
+  --fg-2:      #ddd;
+  --fg-3:      #bbb;
+  --fg-4:      #777;
+  --fg-5:      #555;
 
-  /* --- Type ------------------------------------------------------------- */
-  --font: "Helvetica Neue", Helvetica, -apple-system, BlinkMacSystemFont,
-          "Apple SD Gothic Neo", "Pretendard Variable", Pretendard,
-          "Segoe UI", Arial, sans-serif;
+  --rule:      #2a2a2a;
+  --rule-soft: #1c1c1c;
 
-  /* --- Grid / rhythm ---------------------------------------------------- */
-  --gutter: 24px;
-  --margin: 32px;
-  --maxw:   1560px;
-  --rule:   1px;
+  /* 액센트 — 흑백 기조에서는 흰색. 주황안은 이 한 줄만 바꾼다. */
+  --accent:    var(--fg);
 
-  /* --- Motion ----------------------------------------------------------- */
-  --ease:      cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-io:   cubic-bezier(0.65, 0, 0.35, 1);
-  --dur:       0.62s;
+  --font: 'Inter', 'Noto Sans KR', -apple-system, 'Apple SD Gothic Neo',
+          Helvetica, Arial, sans-serif;
+  --mono: 'Courier New', ui-monospace, monospace;
+
+  --margin: 24px;
+  --maxw:   1200px;
+  --ease:   cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (min-width: 900px)  { :root { --margin: 48px; } }
-@media (min-width: 1280px) { :root { --margin: 64px; --gutter: 32px; } }
+@media (min-width: 768px)  { :root { --margin: 50px; } }
+@media (min-width: 1280px) { :root { --margin: 80px; } }
 
-/* --- Reset ---------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
+
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
   margin: 0;
-  background: var(--ink);
-  color: var(--w-100);
+  background: var(--bg);
+  color: var(--fg);
   font-family: var(--font);
-  font-weight: 400;
+  font-weight: 300;
   font-size: 16px;
-  line-height: 1.55;
-  letter-spacing: -0.01em;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4, p, figure, ul, ol { margin: 0; }
-
-/* All-gothic hard rule: no faux italics anywhere. Hangul has no true italic,
-   and Helvetica Neue's synthesized slant is a defect at any size. Emphasis is
-   carried by colour and weight instead. */
-em, i, cite, dfn { font-style: normal; }
+h1, h2, h3, h4, p, figure, ul, ol, dl, dd { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
 img, video { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
-::selection { background: var(--flame); color: var(--ink); }
+/* 올고딕 하드룰: 가짜 이탤릭 금지. 한글엔 진짜 이탤릭이 없다. */
+em, i, cite, dfn { font-style: normal; }
 
-/* --- Type primitives ------------------------------------------------------ */
+::selection { background: var(--fg); color: var(--bg); }
 
-/* Display — tight, large, negative tracking. Pentagram discipline. */
-.t-display {
-  font-weight: 700;
-  font-size: clamp(2.75rem, 8.2vw, 8.5rem);
-  line-height: 0.92;
-  letter-spacing: -0.042em;
+:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
+
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 999;
+  background: var(--fg); color: var(--bg); padding: 12px 18px; font-weight: 700;
+}
+.skip:focus { left: 0; }
+
+/* --- 레이아웃 ------------------------------------------------------------- */
+.shell {
+  width: 100%; max-width: var(--maxw);
+  margin-inline: auto; padding-inline: var(--margin);
+}
+
+.section { padding-block: clamp(90px, 12vw, 180px); }
+
+/* 섹션 머리 — 번호 + 라벨, 헤어라인 */
+.sec-head {
+  display: flex; align-items: baseline; gap: 14px;
+  padding-bottom: 16px; margin-bottom: clamp(40px, 6vw, 80px);
+  border-bottom: 1px solid var(--rule);
+}
+.sec-num {
+  font-family: var(--mono); font-size: 0.75rem;
+  color: var(--accent); letter-spacing: 0.05em;
+}
+.sec-label {
+  font-size: 0.75rem; font-weight: 400;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-4);
+}
+
+/* --- 타입 ----------------------------------------------------------------- */
+.t-lead {
+  font-size: clamp(1.5rem, 3.6vw, 2.75rem);
+  line-height: 1.35; font-weight: 300; letter-spacing: -0.02em;
   text-wrap: balance;
 }
+.t-body { font-size: 1rem; line-height: 1.8; color: var(--fg-3); font-weight: 300; }
+.t-small { font-size: 0.8125rem; line-height: 1.7; color: var(--fg-4); }
 
-.t-head {
-  font-weight: 700;
-  font-size: clamp(1.75rem, 3.4vw, 3.25rem);
-  line-height: 1.06;
-  letter-spacing: -0.032em;
+.mono {
+  font-family: var(--mono); font-size: 0.75rem;
+  letter-spacing: 0.05em; color: var(--fg-4);
 }
 
-.t-sub {
-  font-weight: 500;
-  font-size: clamp(1.05rem, 1.5vw, 1.375rem);
-  line-height: 1.45;
-  letter-spacing: -0.018em;
-  color: var(--w-72);
-}
-
-.t-body { font-size: 0.9375rem; line-height: 1.65; color: var(--w-72); }
-
-/* Label — the workhorse. Uppercase, wide tracking, small. */
-.t-label {
-  font-weight: 500;
-  font-size: 0.6875rem;
-  line-height: 1;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--w-38);
-}
-
-.t-num {
-  font-weight: 500;
-  font-size: 0.6875rem;
-  letter-spacing: 0.1em;
-  font-variant-numeric: tabular-nums;
-  color: var(--flame);
-}
-
-.flame { color: var(--flame); }
-
-/* --- Layout primitives ---------------------------------------------------- */
-.shell {
-  width: 100%;
-  max-width: var(--maxw);
-  margin-inline: auto;
-  padding-inline: var(--margin);
-}
-
-.section { padding-block: clamp(80px, 11vw, 168px); }
-
-/* Section header: hairline rule + numbered label. Repeats site-wide. */
-.section-head {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  padding-bottom: 18px;
-  margin-bottom: clamp(40px, 5vw, 72px);
-  border-bottom: var(--rule) solid var(--hair);
-}
-.section-head__idx { color: var(--flame); }
-
-/* --- Scroll reveal -------------------------------------------------------- */
+/* --- 리빌 ----------------------------------------------------------------- */
 .reveal {
-  opacity: 0;
-  transform: translateY(22px);
-  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
-  transition-delay: var(--reveal-delay, 0ms);
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+  transition-delay: var(--d, 0ms);
 }
-.reveal.is-in { opacity: 1; transform: none; }
-
+.reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
 }
 
-/* --- Focus ---------------------------------------------------------------- */
-:focus-visible {
-  outline: 2px solid var(--flame);
-  outline-offset: 3px;
-}
-
-.skip {
-  position: absolute; left: -9999px; top: 0; z-index: 999;
-  background: var(--flame); color: var(--ink);
-  padding: 12px 18px; font-weight: 700;
-}
-.skip:focus { left: 0; }
+/* 액센트 텍스트 유틸 */
+.accent { color: var(--accent); }
