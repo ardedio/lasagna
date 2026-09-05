@@ -12,12 +12,16 @@
 
 ## 1. 히어로 영상 — `video/background.mp4`
 
-원본: `https://www.lasagna.kr/background.mp4`
+**원본은 이미 서버에 있다** — `/www/background.mp4` (18.5MB).
+다운로드할 필요 없이 파일질라로 Mac 에 끌어다 놓고 그 경로를 넘기면 된다.
 
 ```bash
 cd site/assets
-./fetch-hero.sh          # 다운로드 + 웹용 재인코딩 + 포스터 추출
+./fetch-hero.sh ~/Downloads/background.mp4    # 로컬 파일에서 (권장)
+./fetch-hero.sh                               # 또는 사이트에서 내려받기
 ```
+
+두 경우 모두 웹용 재인코딩(무음·1080p·8초)과 포스터 추출까지 한 번에 한다.
 
 수동으로 할 경우:
 
