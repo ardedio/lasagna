@@ -32,7 +32,8 @@ site/
 
 `drafts/` 는 배포 트리 밖이다 — 인덱스에서 내렸지만 보존하는 케이스 초안이 들어간다.
 
-- **카페24 HTTPS 적용 — 단계별 가이드**: [`docs/CAFE24-HTTPS.md`](docs/CAFE24-HTTPS.md)
+- **카페24 HTTPS 현황과 해결책**: [`docs/CAFE24-HTTPS.md`](docs/CAFE24-HTTPS.md)
+  (인증서 ✅ / http→https 자동전환 ❌ — 서버가 nginx 라 `.htaccess` 가 안 먹는다)
 - 배포 전반 · 호스팅 선택: [`docs/DEPLOY.md`](docs/DEPLOY.md)
 - 설계 판단과 남은 결정: [`docs/HOME-V2.md`](docs/HOME-V2.md)
 - 케이스 페이지 추가법 · 카피 원칙 · 컴플라이언스: [`docs/CASE-PAGES.md`](docs/CASE-PAGES.md)

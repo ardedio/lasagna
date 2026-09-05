@@ -39,7 +39,7 @@
 
 | 호스팅 | 조치 |
 |---|---|
-| **카페24** (현재 사용 중) | → **[단계별 가이드: `CAFE24-HTTPS.md`](CAFE24-HTTPS.md)** |
+| **카페24** (현재 사용 중) | 서버가 **openresty(nginx)** — `.htaccess` 불가. 카페24에 서버 리다이렉트 요청 필요. → [`CAFE24-HTTPS.md`](CAFE24-HTTPS.md) |
 | 가비아 · 후이즈 등 국내 호스팅 | 관리 콘솔에서 **무료 SSL(Let's Encrypt)** 신청 → 적용 후 HTTP→HTTPS 리다이렉트 켜기 |
 | Cloudflare 를 이미 쓰는 경우 | SSL/TLS 모드를 **Full (strict)** 로, `Always Use HTTPS` 켜기 |
 | 자체 서버 (nginx/Apache) | `certbot --nginx -d lasagna.kr -d www.lasagna.kr` → 자동 갱신 확인 |
