@@ -6,6 +6,7 @@
   'use strict';
 
   var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.documentElement.classList.add('js');
 
   /* ------------------------------------------------------- scroll reveal */
   if ('IntersectionObserver' in window && !REDUCED) {

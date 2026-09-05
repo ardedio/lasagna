@@ -6,6 +6,7 @@
   'use strict';
 
   var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.documentElement.classList.add('js');
   var KV_DIR = 'assets/kv/';
   var FALLBACK = KV_DIR + '_placeholder.svg';
 

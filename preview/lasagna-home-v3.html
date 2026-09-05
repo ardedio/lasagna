@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lasagna Home v3</title>
+<meta name="description" content="라자냐는 AI를 사고의 도구로 삼아 디자인의 구조를 설계하는 회사입니다. 기술과 감각, 전략과 실행을 겹겹이 쌓아 새로운 규칙을 만들어갑니다.">
+<meta name="theme-color" content="#000000">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lasagna">
+<meta property="og:description" content="문제를 바라보는 방식부터 다시 디자인합니다.">
+<meta property="og:image" content="assets/kv/og.jpg">
+<meta property="og:locale" content="ko_KR">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   LASAGNA — Base
+   구조 원리: 겹겹이 쌓기(layering). 이름이 곧 방법론이다.
+
+   타입: 현재 라이브 사이트와 동일하게 Inter + Noto Sans KR.
+        둘 다 고딕이라 "올고딕" 하드룰을 만족한다. 브랜드에 이미 자리잡은
+        조합이므로 시스템 폰트로 바꾸지 않는다.
+
+   컬러: 흑백 기조. 액센트는 --accent 한 줄로 바뀐다.
+        (라이브 사이트에 액센트 컬러가 없어 흑백을 기본값으로 둔다)
+   ========================================================================== */
+
+:root {
+  --bg:        #000;
+  --bg-raise:  #111;
+  --bg-layer:  #0a0a0a;
+
+  --fg:        #fff;
+  --fg-2:      #ddd;
+  --fg-3:      #bbb;
+  --fg-4:      #777;
+  --fg-5:      #555;
+
+  --rule:      #2a2a2a;
+  --rule-soft: #1c1c1c;
+
+  /* 액센트 — 흑백 기조에서는 흰색. 주황안은 이 한 줄만 바꾼다. */
+  --accent:    var(--fg);
+
+  --font: 'Inter', 'Noto Sans KR', -apple-system, 'Apple SD Gothic Neo',
+          Helvetica, Arial, sans-serif;
+  --mono: 'Courier New', ui-monospace, monospace;
+
+  --margin: 24px;
+  --maxw:   1200px;
+  --ease:   cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (min-width: 768px)  { :root { --margin: 50px; } }
+@media (min-width: 1280px) { :root { --margin: 80px; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, p, figure, ul, ol, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img, video { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+/* 올고딕 하드룰: 가짜 이탤릭 금지. 한글엔 진짜 이탤릭이 없다. */
+em, i, cite, dfn { font-style: normal; }
+
+::selection { background: var(--fg); color: var(--bg); }
+
+:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
+
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 999;
+  background: var(--fg); color: var(--bg); padding: 12px 18px; font-weight: 700;
+}
+.skip:focus { left: 0; }
+
+/* --- 레이아웃 ------------------------------------------------------------- */
+.shell {
+  width: 100%; max-width: var(--maxw);
+  margin-inline: auto; padding-inline: var(--margin);
+}
+
+.section { padding-block: clamp(90px, 12vw, 180px); }
+
+/* 섹션 머리 — 번호 + 라벨, 헤어라인 */
+.sec-head {
+  display: flex; align-items: baseline; gap: 14px;
+  padding-bottom: 16px; margin-bottom: clamp(40px, 6vw, 80px);
+  border-bottom: 1px solid var(--rule);
+}
+.sec-num {
+  font-family: var(--mono); font-size: 0.75rem;
+  color: var(--accent); letter-spacing: 0.05em;
+}
+.sec-label {
+  font-size: 0.75rem; font-weight: 400;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-4);
+}
+
+/* --- 타입 ----------------------------------------------------------------- */
+.t-lead {
+  font-size: clamp(1.5rem, 3.6vw, 2.75rem);
+  line-height: 1.35; font-weight: 300; letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.t-body { font-size: 1rem; line-height: 1.8; color: var(--fg-3); font-weight: 300; }
+.t-small { font-size: 0.8125rem; line-height: 1.7; color: var(--fg-4); }
+
+.mono {
+  font-family: var(--mono); font-size: 0.75rem;
+  letter-spacing: 0.05em; color: var(--fg-4);
+}
+
+/* --- 리빌 -----------------------------------------------------------------
+   기본은 '보이는' 상태다. JS 가 <html> 에 .js 를 붙였을 때만 숨겼다가
+   스크롤에 맞춰 드러낸다. 스크립트가 죽어도 내용은 남는다. */
+.reveal { opacity: 1; transform: none; }
+.js .reveal {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+  transition-delay: var(--d, 0ms);
+}
+.js .reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* 액센트 텍스트 유틸 */
+.accent { color: var(--accent); }
+
+/* ==========================================================================
+   LASAGNA — Home v3
+   ========================================================================== */
+
+/* --------------------------------------------------------------- NAV ----- */
+.nav {
+  position: fixed; inset: 0 0 auto 0; z-index: 60;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px var(--margin);
+  mix-blend-mode: difference;
+}
+.nav__logo img { width: 96px; height: auto; filter: invert(1) brightness(100); }
+.nav__links { display: none; gap: 26px; }
+@media (min-width: 840px) { .nav__links { display: flex; } }
+.nav__link {
+  font-size: 0.6875rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--fg-3); transition: color 0.3s var(--ease);
+}
+.nav__link:hover { color: var(--fg); }
+
+/* -------------------------------------------------------------- HERO ----- */
+.hero {
+  position: relative; min-height: 100svh;
+  display: flex; align-items: flex-end;
+  padding-bottom: clamp(48px, 8vh, 96px);
+  overflow: hidden;
+}
+.hero__media { position: absolute; inset: 0; z-index: -2; background: var(--bg); }
+.hero__video {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: saturate(0.15) contrast(1.1) brightness(0.5);
+  opacity: 0; transition: opacity 1.2s var(--ease);
+}
+.hero__video.ready { opacity: 1; }
+.hero__media::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, #151515 0%, #000 80%);
+  opacity: 1; transition: opacity 1.2s var(--ease);
+}
+.hero[data-video="ok"] .hero__media::after { opacity: 0; }
+.hero__scrim {
+  position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.85));
+}
+
+.hero__inner { width: 100%; }
+.hero__line {
+  font-size: clamp(1.75rem, 4.6vw, 3.75rem);
+  line-height: 1.25; font-weight: 300; letter-spacing: -0.025em;
+  max-width: 20ch;
+}
+.hero__line strong { font-weight: 700; color: var(--accent); }
+.hero__en {
+  margin-top: 22px; max-width: 52ch;
+  font-size: 0.9375rem; line-height: 1.7; color: var(--fg-4);
+}
+.hero__foot {
+  display: flex; flex-wrap: wrap; gap: 16px 28px;
+  justify-content: space-between; align-items: baseline;
+  margin-top: clamp(40px, 6vh, 72px);
+  padding-top: 20px; border-top: 1px solid var(--rule);
+}
+
+/* ------------------------------------------------------------ 01 관점 ---- */
+.view__grid { display: grid; gap: clamp(32px, 5vw, 72px); }
+@media (min-width: 980px) { .view__grid { grid-template-columns: 1.1fr 0.9fr; } }
+.view__body { display: grid; gap: 24px; max-width: 52ch; align-content: start; }
+
+/* ---------------------------------------------------------- 02 레이어 ---- */
+/* 네 개 층이 겹겹이 쌓이는 단면. 각 층은 오른쪽으로 한 칸씩 밀린다. */
+.layers { border-top: 1px solid var(--rule); }
+
+.layer {
+  position: relative;
+  display: grid; gap: 10px 28px;
+  padding: clamp(28px, 3.4vw, 44px) 0;
+  border-bottom: 1px solid var(--rule);
+  /* 층이 쌓일수록 안으로 들어간다 — 단면도처럼 */
+  padding-left: calc(var(--i, 0) * clamp(0px, 3vw, 44px));
+  transition: background 0.5s var(--ease), padding-left 0.5s var(--ease);
+}
+@media (min-width: 840px) {
+  .layer { grid-template-columns: 56px minmax(0, 220px) minmax(0, 1fr); align-items: baseline; }
+}
+.layer:hover { background: var(--bg-raise); }
+
+.layer__i { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); }
+.layer__name {
+  font-size: clamp(1.25rem, 2.4vw, 1.875rem);
+  font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;
+}
+.layer__name span {
+  display: block; margin-top: 4px;
+  font-size: 0.6875rem; font-weight: 400; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--fg-5);
+}
+.layer__do { display: flex; flex-wrap: wrap; gap: 6px 10px; align-content: start; }
+.layer__do li {
+  font-size: 0.8125rem; color: var(--fg-3);
+  border: 1px solid var(--rule); padding: 5px 11px; white-space: nowrap;
+}
+
+.layers__note {
+  margin-top: 28px; max-width: 46ch;
+}
+
+/* ---------------------------------------------------------- 03 증거 ------ */
+.work { border-top: 1px solid var(--rule); }
+.work__row {
+  position: relative; isolation: isolate;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px;
+  padding-block: clamp(24px, 3vw, 34px);
+  border-bottom: 1px solid var(--rule);
+  transition: padding-inline 0.5s var(--ease);
+}
+@media (min-width: 840px) {
+  .work__row {
+    grid-template-columns: 56px minmax(0, 1.2fr) minmax(0, 1fr) auto;
+    gap: 24px; align-items: center;
+  }
+  .work__row:hover { padding-inline: 12px; }
+}
+.work__row::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: var(--bg-raise); opacity: 0;
+  transition: opacity 0.45s var(--ease);
+}
+.work__row:hover::before { opacity: 1; }
+
+.work__i { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); }
+.work__name {
+  font-size: clamp(1.25rem, 2.6vw, 2rem);
+  font-weight: 700; letter-spacing: -0.028em; line-height: 1.1;
+  transition: color 0.35s var(--ease);
+}
+.work__meta { font-size: 0.8125rem; color: var(--fg-4); }
+.work__meta.pending { color: var(--fg-5); }
+.work__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.work__tag {
+  font-size: 0.625rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--fg-4); border: 1px solid var(--rule); padding: 4px 9px; white-space: nowrap;
+}
+.work__tag--soon { border-style: dashed; color: var(--fg-5); }
+.work__hit { position: absolute; inset: 0; }
+
+.work__thumb { display: none; }
+@media (max-width: 839px) {
+  .work__thumb {
+    display: block; margin-top: 12px; aspect-ratio: 16/9;
+    border: 1px solid var(--rule); background: var(--bg-raise);
+  }
+  .work__thumb img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.3); }
+}
+
+.kv-peek {
+  position: fixed; top: 0; left: 0; z-index: 40;
+  width: 280px; aspect-ratio: 16/9; pointer-events: none;
+  opacity: 0; transform: translate3d(-50%,-50%,0) scale(0.95);
+  transition: opacity 0.34s var(--ease), transform 0.34s var(--ease);
+  border: 1px solid var(--rule); background: var(--bg-raise); overflow: hidden;
+}
+.kv-peek.on { opacity: 1; transform: translate3d(-50%,-50%,0) scale(1); }
+.kv-peek img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.3); }
+@media (hover: none), (max-width: 839px) { .kv-peek { display: none; } }
+
+/* ---------------------------------------------------------- 04 연락 ------ */
+.contact { border-top: 1px solid var(--rule); background: var(--bg-raise); }
+.contact__line {
+  display: block; padding-block: clamp(56px, 8vw, 110px);
+  font-size: clamp(1.75rem, 5.6vw, 4.5rem);
+  font-weight: 300; letter-spacing: -0.03em; line-height: 1.1;
+}
+.contact__line em { font-weight: 700; color: var(--accent); border-bottom: 2px solid var(--rule); }
+.contact__line:hover em { border-bottom-color: var(--accent); }
+
+.contact__rows {
+  display: grid; gap: 24px; padding-bottom: clamp(48px, 6vw, 80px);
+}
+@media (min-width: 720px) { .contact__rows { grid-template-columns: repeat(3, 1fr); } }
+.contact__k {
+  display: block; font-size: 0.625rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--fg-5); margin-bottom: 8px;
+}
+.contact__v { font-size: 0.9375rem; color: var(--fg-2); }
+.contact__v a { border-bottom: 1px solid var(--rule); padding-bottom: 2px; }
+.contact__v a:hover { border-bottom-color: var(--fg); }
+.copied { margin-left: 8px; font-size: 0.75rem; color: var(--fg-4); opacity: 0; transition: opacity 0.25s; }
+.copied.show { opacity: 1; }
+
+.foot {
+  display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between;
+  padding-block: 24px; border-top: 1px solid var(--rule-soft);
+}
+
+
+/* ── 단일 파일 미리보기 전용 ───────────────────────────────────────────────
+   에셋 파일이 없는 상태에서 보기 위한 것. 실제 사이트에는 적용되지 않는다. */
+.nav__logo {
+  font-weight: 700; font-size: 0.8125rem;
+  letter-spacing: 0.22em; text-transform: uppercase;
+}
+.preview-note {
+  /* 고정이 아니라 문서 끝에 놓는다 — 콘텐츠를 가리지 않도록 */
+  border-top: 1px solid var(--rule); background: var(--bg);
+  padding: 18px var(--margin) 26px;
+  font-family: var(--mono); font-size: 0.625rem;
+  letter-spacing: 0.08em; color: var(--fg-5); text-align: center;
+}
+.preview-note b { color: var(--fg-2); font-weight: 400; }
+
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<header class="nav">
+  <a class="nav__logo" href="#top" aria-label="Lasagna — 홈">Lasagna</a>
+  <nav class="nav__links" aria-label="주요 메뉴">
+    <a class="nav__link" href="#view">관점</a>
+    <a class="nav__link" href="#layers">레이어</a>
+    <a class="nav__link" href="#work">Work</a>
+    <a class="nav__link" href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main id="main">
+
+<!-- ══════════════════════════════════════════════════════════════ 00 HERO -->
+<section class="hero" id="top" data-video="pending">
+  <div class="hero__media"></div>
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <div class="shell hero__inner">
+    <h1 class="hero__line">
+      문제를 바라보는 <strong>방식</strong>부터<br>다시 디자인합니다.
+    </h1>
+    <p class="hero__en">
+      We redesign not only outcomes, but the way problems are approached.
+    </p>
+    <div class="hero__foot">
+      <span class="mono">Design company · Seoul</span>
+      <a class="mono" href="#view">Scroll ↓</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ 01 관점 -->
+<section class="section" id="view">
+  <div class="shell">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-label">관점 · Perspective</h2>
+    </div>
+
+    <div class="view__grid">
+      <p class="t-lead reveal">
+        결과물만 필요하다면<br>더 싼 곳이 있습니다.
+      </p>
+      <div class="view__body">
+        <p class="t-body reveal" style="--d:80ms">
+          라자냐는 AI를 사고의 도구로 삼아 디자인의 구조를 설계하는 회사입니다.
+          우리는 단순한 결과물이 아니라, <strong style="color:var(--fg);font-weight:400">문제를
+          바라보는 방식부터 다시 디자인합니다.</strong>
+        </p>
+        <p class="t-body reveal" style="--d:160ms">
+          같은 브리프를 받아도 무엇을 문제로 규정하느냐에 따라 답이 달라집니다.
+          그 규정을 클라이언트와 함께 다시 세우는 것이 작업의 시작입니다.
+        </p>
+        <p class="t-small reveal" style="--d:240ms">
+          Lasagna is a design company that uses AI as a tool for thinking and
+          structuring ideas. By layering technology, sensibility, strategy, and
+          execution, we create new rules.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════ 02 레이어 -->
+<section class="section" id="layers">
+  <div class="shell">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-label">레이어 · Four Layers</h2>
+    </div>
+
+    <p class="t-lead reveal" style="margin-bottom:clamp(32px,4vw,56px);max-width:24ch">
+      기술과 감각, 전략과 실행을<br>겹겹이 쌓습니다.
+    </p>
+
+    <div class="layers">
+      <article class="layer reveal" style="--i:0">
+        <span class="layer__i">01</span>
+        <h3 class="layer__name">기술<span>Technology</span></h3>
+        <ul class="layer__do">
+          <li>AI 파이프라인 설계</li><li>워크플로우 도입</li><li>제작 자동화</li>
+        </ul>
+      </article>
+      <article class="layer reveal" style="--i:1; --d:80ms">
+        <span class="layer__i">02</span>
+        <h3 class="layer__name">감각<span>Sensibility</span></h3>
+        <ul class="layer__do">
+          <li>브랜딩</li><li>비주얼 시스템</li><li>패키지</li>
+        </ul>
+      </article>
+      <article class="layer reveal" style="--i:2; --d:160ms">
+        <span class="layer__i">03</span>
+        <h3 class="layer__name">전략<span>Strategy</span></h3>
+        <ul class="layer__do">
+          <li>포지셔닝</li><li>네이밍</li><li>피치덱</li>
+        </ul>
+      </article>
+      <article class="layer reveal" style="--i:3; --d:240ms">
+        <span class="layer__i">04</span>
+        <h3 class="layer__name">실행<span>Execution</span></h3>
+        <ul class="layer__do">
+          <li>AI 영상</li><li>SNS 콘텐츠</li><li>리테이너 운영</li>
+        </ul>
+      </article>
+    </div>
+
+    <p class="t-small layers__note reveal">
+      네 층은 순서가 아니라 두께입니다. 프로젝트마다 어느 층을 두껍게 쌓을지가 달라집니다.
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ 03 증거 -->
+<section class="section" id="work">
+  <div class="shell">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-label">증거 · Selected Work</h2>
+    </div>
+
+    <ul class="work" id="workList"></ul>
+
+    <noscript>
+      <p class="t-body" style="padding-top:20px">이상봉 · LIE · SYNOPEX · 하루하루</p>
+    </noscript>
+  </div>
+</section>
+
+</main>
+
+<!-- ════════════════════════════════════════════════════════════ 04 연락 -->
+<section class="contact" id="contact">
+  <div class="shell">
+    <a class="contact__line" href="mailto:info@lasagna.kr">
+      프로젝트를 <em>시작합니다</em> →
+    </a>
+
+    <div class="contact__rows">
+      <div>
+        <span class="contact__k">Email</span>
+        <span class="contact__v">
+          <a href="mailto:info@lasagna.kr" data-mail>info@lasagna.kr</a><span class="copied">복사됨</span>
+        </span>
+      </div>
+      <div>
+        <span class="contact__k">Studio</span>
+        <span class="contact__v">Seoul, Republic of Korea</span>
+      </div>
+      <div>
+        <span class="contact__k">Director</span>
+        <span class="contact__v">김률 · Creative Director</span>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span class="mono">© 2026 Lasagna. All rights reserved.</span>
+      <span class="mono">겹겹이 쌓아 새로운 규칙을</span>
+    </div>
+  </div>
+</section>
+
+<div class="preview-note">단일 파일 미리보기 — 이미지 · 영상 <b>미포함</b>. 레이아웃과 타이포 확인용.</div>
+<script>
+(function () {
+  'use strict';
+  var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.documentElement.classList.add('js');
+
+  function el(t, c, x) { var n = document.createElement(t); if (c) n.className = c;
+    if (x != null) n.textContent = x; return n; }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  var io = null;
+  if ('IntersectionObserver' in window && !REDUCED) {
+    io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.06 });
+  }
+  function observe(n) { if (io) io.observe(n); else n.classList.add('in'); }
+  document.querySelectorAll('.reveal').forEach(observe);
+
+  var ITEMS = [
+  {
+    "name": "LIE SANG BONG",
+    "meta": "2.3.0 × ILLUSELLE · 캠페인 필름",
+    "tags": [
+      "AI Film",
+      "Campaign",
+      "30s"
+    ],
+    "year": "2026",
+    "page": "work/lie-sang-bong.html"
+  },
+  {
+    "name": "LIE",
+    "meta": "26FW · 이청청",
+    "tags": [
+      "Pitch Deck",
+      "Brand Story"
+    ],
+    "year": "2026",
+    "page": null
+  },
+  {
+    "name": "SYNOPEX",
+    "meta": "시노펙스 · 브랜드 필름",
+    "tags": [
+      "Cinematic",
+      "4×30s",
+      "Series"
+    ],
+    "year": "2026",
+    "page": "work/synopex.html"
+  },
+  {
+    "name": "HARUHARU WONDER",
+    "meta": "미국 리테일 런칭 · Target 전역 입점",
+    "tags": [
+      "Campaign",
+      "Social",
+      "US Market"
+    ],
+    "year": "2026",
+    "page": "work/haruharu-wonder.html"
+  }
+];
+
+  var list = document.getElementById('workList');
+  if (list) {
+    ITEMS.forEach(function (item, i) {
+      var row = el('li', 'work__row reveal');
+      row.style.setProperty('--d', (i * 60) + 'ms');
+      row.appendChild(el('span', 'work__i', pad(i + 1)));
+      row.appendChild(el('h3', 'work__name', item.name));
+      var meta = el('span', 'work__meta', item.meta || '자료 정리 중');
+      if (!item.meta) meta.classList.add('pending');
+      row.appendChild(meta);
+      var tags = el('ul', 'work__tags');
+      (item.tags || []).forEach(function (t) { tags.appendChild(el('li', 'work__tag', t)); });
+      tags.appendChild(el('li', 'work__tag', item.year));
+      if (!item.page) tags.appendChild(el('li', 'work__tag work__tag--soon', '준비 중'));
+      row.appendChild(tags);
+      list.appendChild(row);
+      observe(row);
+    });
+  }
+
+  document.querySelectorAll('a[data-mail]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      var note = a.parentNode.querySelector('.copied');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(a.textContent.trim()).then(function () {
+          if (!note) return;
+          note.classList.add('show');
+          setTimeout(function () { note.classList.remove('show'); }, 2000);
+        }, function () {});
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
