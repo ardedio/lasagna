@@ -1,24 +1,35 @@
 {
   "_note": "Single source of truth for the Work index on the Home page. `items` is what renders, in order. `_backlog` holds projects pulled out of the index pending 자료정리 — move an entry back into `items` when its material is ready; nothing else needs to change. `page` points at a case detail page; null renders the row unlinked with a 준비 중 chip rather than a 404. `needs_input: true` marks a row whose scope and copy are not yet supplied — the row renders with a 자료 정리 중 meta line and is counted by the asset chip.",
-  "_spec": { "ratio": "16:9", "min": "1280x720", "format": "jpg", "target_kb": 220 },
-
+  "_spec": {
+    "ratio": "16:9",
+    "min": "1280x720",
+    "format": "jpg",
+    "target_kb": 220
+  },
   "items": [
     {
-      "id": "leesangbong",
-      "name": "LIE SANGBONG",
-      "meta": "",
-      "tags": [],
+      "id": "liesangbong",
+      "name": "LIE SANG BONG",
+      "meta": "2.3.0 × ILLUSELLE · 캠페인 필름",
+      "tags": [
+        "AI Film",
+        "Campaign",
+        "30s"
+      ],
       "year": "2026",
-      "file": "kv-leesangbong.jpg",
+      "file": "kv-liesangbong.jpg",
       "placeholder": true,
-      "page": null,
-      "needs_input": true
+      "page": "work/lie-sang-bong.html",
+      "needs_input": false
     },
     {
       "id": "lie",
       "name": "LIE",
       "meta": "26FW · 이청청",
-      "tags": ["Pitch Deck", "Brand Story"],
+      "tags": [
+        "Pitch Deck",
+        "Brand Story"
+      ],
       "year": "2026",
       "file": "kv-lie.jpg",
       "placeholder": true,
@@ -29,7 +40,11 @@
       "id": "synopex",
       "name": "SYNOPEX",
       "meta": "시노펙스 · 브랜드 필름",
-      "tags": ["Cinematic", "4×30s", "Series"],
+      "tags": [
+        "Cinematic",
+        "4×30s",
+        "Series"
+      ],
       "year": "2026",
       "file": "kv-synopex.jpg",
       "placeholder": true,
@@ -48,13 +63,16 @@
       "needs_input": true
     }
   ],
-
   "_backlog": [
     {
       "id": "biolin",
       "name": "BIOLIN",
       "meta": "더마 코스메틱 · 자체 브랜드",
-      "tags": ["Branding", "Naming", "Package"],
+      "tags": [
+        "Branding",
+        "Naming",
+        "Package"
+      ],
       "year": "2026",
       "file": "kv-biolin.jpg",
       "placeholder": true,
@@ -66,7 +84,11 @@
       "id": "darefit",
       "name": "DAREFIT",
       "meta": "압구정 다리핏의원",
-      "tags": ["Medical", "Pitch Deck", "AI Film"],
+      "tags": [
+        "Medical",
+        "Pitch Deck",
+        "AI Film"
+      ],
       "year": "2026",
       "file": "kv-darefit.jpg",
       "placeholder": true,
@@ -78,7 +100,11 @@
       "id": "tfit",
       "name": "TFIT",
       "meta": "티핏 · ICY 라인",
-      "tags": ["Retainer", "Social", "Meta 9:16"],
+      "tags": [
+        "Retainer",
+        "Social",
+        "Meta 9:16"
+      ],
       "year": "2026",
       "file": "kv-tfit.jpg",
       "placeholder": true,
@@ -90,7 +116,10 @@
       "id": "cocospack",
       "name": "COCOSPACK",
       "meta": "코코스팩 · About Us",
-      "tags": ["Web Architecture", "Design System"],
+      "tags": [
+        "Web Architecture",
+        "Design System"
+      ],
       "year": "2026",
       "file": "kv-cocospack.jpg",
       "placeholder": true,
@@ -102,7 +131,10 @@
       "id": "dss",
       "name": "DSS GROUP",
       "meta": "동성사 · 유니퍼 · 딜라임",
-      "tags": ["AI Workflow", "PoC"],
+      "tags": [
+        "AI Workflow",
+        "PoC"
+      ],
       "year": "2026",
       "file": "kv-dss.jpg",
       "placeholder": true,
