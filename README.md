@@ -32,6 +32,7 @@ site/
 
 `drafts/` 는 배포 트리 밖이다 — 인덱스에서 내렸지만 보존하는 케이스 초안이 들어간다.
 
+- **사이트 기획 v3 (여기부터 읽는다)**: [`docs/PLAN.md`](docs/PLAN.md)
 - **카페24 HTTPS 현황과 해결책**: [`docs/CAFE24-HTTPS.md`](docs/CAFE24-HTTPS.md)
   (인증서 ✅ / http→https 자동전환 ❌ — 서버가 nginx 라 `.htaccess` 가 안 먹는다)
 - 배포 전반 · 호스팅 선택: [`docs/DEPLOY.md`](docs/DEPLOY.md)
