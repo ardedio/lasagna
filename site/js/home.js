@@ -54,69 +54,43 @@
     if (REDUCED) { v.removeAttribute('loop'); v.pause(); }
   })();
 
-  /* ----------------------------------------------------------- KV 프리뷰 - */
-  var peek = document.getElementById('kvPeek');
-  var peekImg = document.getElementById('kvPeekImg');
-  var on = false, tx = 0, ty = 0, raf = null;
-
-  function move() {
-    raf = null;
-    if (peek) peek.style.transform =
-      'translate3d(' + tx + 'px,' + ty + 'px,0) scale(' + (on ? 1 : 0.95) + ')';
-  }
-  function track(e) { tx = e.clientX - 140; ty = e.clientY - 79; if (!raf) raf = requestAnimationFrame(move); }
-  function show(src) {
-    if (!peek || !peekImg) return;
-    if (peekImg.getAttribute('src') !== src) peekImg.setAttribute('src', src);
-    on = true; peek.classList.add('on');
-    window.addEventListener('pointermove', track);
-  }
-  function hide() {
-    if (!peek) return;
-    on = false; peek.classList.remove('on');
-    window.removeEventListener('pointermove', track);
-  }
-  if (peekImg) {
-    peekImg.addEventListener('error', function () {
-      if (peekImg.getAttribute('src') !== FALLBACK) peekImg.setAttribute('src', FALLBACK);
-    });
-  }
-
-  /* --------------------------------------------------------- Work 렌더 -- */
+  /* --------------------------------------------------------- Work 렌더 --
+     한 행 = 텍스트 블록 + 16:9 스틸. 이미지가 구조의 일부다. */
   function renderWork(items) {
     var list = document.getElementById('workList');
     if (!list) return;
     var frag = document.createDocumentFragment();
 
     items.forEach(function (item, i) {
-      var src = KV_DIR + item.file;
       var row = el('li', 'work__row reveal');
-      row.style.setProperty('--d', (i * 60) + 'ms');
+      row.style.setProperty('--d', (i * 70) + 'ms');
 
-      row.appendChild(el('span', 'work__i', pad(i + 1)));
-      row.appendChild(el('h3', 'work__name', item.name));
+      var txt = el('div', 'work__txt');
+      txt.appendChild(el('span', 'work__i', pad(i + 1)));
+      txt.appendChild(el('h3', 'work__name', item.name));
 
       var meta = el('span', 'work__meta', item.meta || '자료 정리 중');
       if (!item.meta) meta.classList.add('pending');
-      row.appendChild(meta);
+      txt.appendChild(meta);
 
       var tags = el('ul', 'work__tags');
       (item.tags || []).forEach(function (t) { tags.appendChild(el('li', 'work__tag', t)); });
       tags.appendChild(el('li', 'work__tag', item.year));
-      row.appendChild(tags);
+      if (!item.page) tags.appendChild(el('li', 'work__tag work__tag--soon', '준비 중'));
+      txt.appendChild(tags);
+      row.appendChild(txt);
 
-      var thumb = el('div', 'work__thumb');
-      var timg = el('img');
-      timg.setAttribute('loading', 'lazy');
-      timg.setAttribute('alt', item.name + ' key visual');
-      timg.setAttribute('src', src);
-      timg.addEventListener('error', function () {
-        if (timg.getAttribute('src') !== FALLBACK) timg.setAttribute('src', FALLBACK);
+      var still = el('figure', 'work__still');
+      var img = el('img');
+      img.setAttribute('loading', i > 1 ? 'lazy' : 'eager');
+      img.setAttribute('alt', item.name + ' — 키비주얼');
+      img.setAttribute('src', KV_DIR + item.file);
+      img.addEventListener('error', function () {
+        if (img.getAttribute('src') !== FALLBACK) img.setAttribute('src', FALLBACK);
       });
-      thumb.appendChild(timg);
-      row.appendChild(thumb);
+      still.appendChild(img);
+      row.appendChild(still);
 
-      // 케이스 페이지가 있는 행만 링크. 없으면 404 로 보내지 않는다.
       var hit;
       if (item.page) {
         hit = el('a', 'work__hit');
@@ -124,11 +98,8 @@
         hit.setAttribute('aria-label', item.name + ' — case study');
       } else {
         hit = el('div', 'work__hit');
-        tags.appendChild(el('li', 'work__tag work__tag--soon', '준비 중'));
+        row.classList.add('is-unlinked');
       }
-      hit.addEventListener('mouseenter', function () { show(src); });
-      hit.addEventListener('mouseleave', hide);
-      hit.addEventListener('focus', hide);
       row.appendChild(hit);
 
       frag.appendChild(row);

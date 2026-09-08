@@ -104,64 +104,68 @@
   margin-top: 28px; max-width: 46ch;
 }
 
-/* ---------------------------------------------------------- 03 증거 ------ */
+/* ---------------------------------------------------------- 03 증거 ------
+   Work 는 이미지가 구조에 들어간다. 텍스트 블록 + 16:9 스틸이 한 행이다.
+   커서를 따라다니던 프리뷰는 뺐다 — 이미지가 제자리를 가지면 필요 없다. */
 .work { border-top: 1px solid var(--rule); }
+
 .work__row {
-  position: relative; isolation: isolate;
-  display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px;
-  padding-block: clamp(24px, 3vw, 34px);
+  position: relative;
+  display: grid; gap: 16px;
+  padding-block: clamp(28px, 4vw, 56px);
   border-bottom: 1px solid var(--rule);
-  transition: padding-inline 0.5s var(--ease);
 }
-@media (min-width: 840px) {
+@media (min-width: 860px) {
   .work__row {
-    grid-template-columns: 56px minmax(0, 1.2fr) minmax(0, 1fr) auto;
-    gap: 24px; align-items: center;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(28px, 4vw, 64px); align-items: center;
   }
-  .work__row:hover { padding-inline: 12px; }
 }
-.work__row::before {
-  content: ""; position: absolute; inset: 0; z-index: -1;
-  background: var(--bg-raise); opacity: 0;
-  transition: opacity 0.45s var(--ease);
-}
-.work__row:hover::before { opacity: 1; }
+
+.work__txt { display: grid; gap: 10px; align-content: center; }
 
 .work__i { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); }
+
 .work__name {
-  font-size: clamp(1.25rem, 2.6vw, 2rem);
-  font-weight: 700; letter-spacing: -0.028em; line-height: 1.1;
-  transition: color 0.35s var(--ease);
+  font-size: clamp(1.5rem, 3.4vw, 2.75rem);
+  font-weight: 700; letter-spacing: -0.03em; line-height: 1.05;
+  transition: opacity 0.35s var(--ease);
 }
-.work__meta { font-size: 0.8125rem; color: var(--fg-4); }
+.work__meta { font-size: 0.875rem; color: var(--fg-4); }
 .work__meta.pending { color: var(--fg-5); }
-.work__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.work__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
 .work__tag {
   font-size: 0.625rem; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--fg-4); border: 1px solid var(--rule); padding: 4px 9px; white-space: nowrap;
 }
 .work__tag--soon { border-style: dashed; color: var(--fg-5); }
+
+/* 스틸 — 저채도 유지. 호버에서만 채도가 살아난다 */
+.work__still {
+  aspect-ratio: 16 / 9; overflow: hidden; background: var(--bg-raise);
+  border: 1px solid var(--rule);
+}
+.work__still img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: saturate(0.25) contrast(1.05) brightness(0.86);
+  transform: scale(1.01);
+  transition: filter 0.6s var(--ease), transform 0.9s var(--ease);
+}
+.work__row:hover .work__still img,
+.work__row:focus-within .work__still img {
+  filter: saturate(0.7) contrast(1.02) brightness(1);
+  transform: scale(1.04);
+}
+.work__row:hover .work__name { opacity: 0.55; }
+
 .work__hit { position: absolute; inset: 0; }
+.work__row.is-unlinked .work__hit { cursor: default; }
 
-.work__thumb { display: none; }
-@media (max-width: 839px) {
-  .work__thumb {
-    display: block; margin-top: 12px; aspect-ratio: 16/9;
-    border: 1px solid var(--rule); background: var(--bg-raise);
-  }
-  .work__thumb img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.3); }
+@media (prefers-reduced-motion: reduce) {
+  .work__still img { transition: none; transform: none; }
+  .work__row:hover .work__still img { transform: none; }
 }
-
-.kv-peek {
-  position: fixed; top: 0; left: 0; z-index: 40;
-  width: 280px; aspect-ratio: 16/9; pointer-events: none;
-  opacity: 0; transform: translate3d(-50%,-50%,0) scale(0.95);
-  transition: opacity 0.34s var(--ease), transform 0.34s var(--ease);
-  border: 1px solid var(--rule); background: var(--bg-raise); overflow: hidden;
-}
-.kv-peek.on { opacity: 1; transform: translate3d(-50%,-50%,0) scale(1); }
-.kv-peek img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.3); }
-@media (hover: none), (max-width: 839px) { .kv-peek { display: none; } }
 
 /* ---------------------------------------------------------- 04 연락 ------ */
 .contact { border-top: 1px solid var(--rule); background: var(--bg-raise); }

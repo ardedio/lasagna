@@ -47,6 +47,15 @@ home += """
 .preview-note b { color: var(--fg-2); font-weight: 400; }
 """
 
+# --- 자리표시자 스틸을 data URI 로 내장 ---------------------------------------
+import base64
+PH = pathlib.Path('/home/user/lasagna/preview/_ph')
+def datauri(pid):
+    f = PH / f'{pid}.jpg'
+    if not f.exists():
+        return None
+    return 'data:image/jpeg;base64,' + base64.b64encode(f.read_bytes()).decode()
+
 # --- HTML 조립 --------------------------------------------------------------
 # 로고 이미지 → 워드마크
 html = re.sub(r'<a class="nav__logo"[^>]*>\s*<img[^>]*>\s*</a>',
@@ -56,9 +65,6 @@ html = re.sub(r'<a class="nav__logo"[^>]*>\s*<img[^>]*>\s*</a>',
 # 히어로 영상: 파일이 없으니 통째로 제거 (CSS 그라운드가 남는다)
 html = re.sub(r'<div class="hero__media">.*?</div>\s*(?=<div class="hero__scrim")',
               '<div class="hero__media"></div>\n  ', html, count=1, flags=re.S)
-
-# KV 프리뷰 레이어 제거
-html = re.sub(r'<div class="kv-peek".*?</div>\s*', '', html, count=1, flags=re.S)
 
 # 외부 CSS/JS 링크 제거
 html = re.sub(r'\s*<link rel="stylesheet" href="css/[^"]*">', '', html)
@@ -72,11 +78,15 @@ html = html.replace('<title>Lasagna — 문제를 바라보는 방식부터 다�
 html = html.replace('</head>', f'<style>\n{base}\n{home}\n</style>\n</head>', 1)
 
 # JS 인라인 (fetch 없이 데이터 내장)
-data = json.dumps([{k: i[k] for k in ('name','meta','tags','year','page')} for i in items],
-                  ensure_ascii=False, indent=2)
+rows = []
+for i in items:
+    r = {k: i[k] for k in ('name','meta','tags','year','page')}
+    r['still'] = datauri(i['id'])
+    rows.append(r)
+data = json.dumps(rows, ensure_ascii=False)
 
 script = """
-<div class="preview-note">단일 파일 미리보기 — 이미지 · 영상 <b>미포함</b>. 레이아웃과 타이포 확인용.</div>
+<div class="preview-note">Work 스틸은 <b>자리표시자</b>입니다 — 실제 작업물이 아니라 구성 확인용. 히어로 영상 미포함.</div>
 <script>
 (function () {
   'use strict';
@@ -102,17 +112,28 @@ script = """
   if (list) {
     ITEMS.forEach(function (item, i) {
       var row = el('li', 'work__row reveal');
-      row.style.setProperty('--d', (i * 60) + 'ms');
-      row.appendChild(el('span', 'work__i', pad(i + 1)));
-      row.appendChild(el('h3', 'work__name', item.name));
+      row.style.setProperty('--d', (i * 70) + 'ms');
+      var txt = el('div', 'work__txt');
+      txt.appendChild(el('span', 'work__i', pad(i + 1)));
+      txt.appendChild(el('h3', 'work__name', item.name));
       var meta = el('span', 'work__meta', item.meta || '자료 정리 중');
       if (!item.meta) meta.classList.add('pending');
-      row.appendChild(meta);
+      txt.appendChild(meta);
       var tags = el('ul', 'work__tags');
       (item.tags || []).forEach(function (t) { tags.appendChild(el('li', 'work__tag', t)); });
       tags.appendChild(el('li', 'work__tag', item.year));
       if (!item.page) tags.appendChild(el('li', 'work__tag work__tag--soon', '준비 중'));
-      row.appendChild(tags);
+      txt.appendChild(tags);
+      row.appendChild(txt);
+
+      if (item.still) {
+        var still = el('figure', 'work__still');
+        var img = el('img');
+        img.setAttribute('alt', item.name + ' — 자리표시자');
+        img.setAttribute('src', item.still);
+        still.appendChild(img);
+        row.appendChild(still);
+      }
       list.appendChild(row);
       observe(row);
     });
